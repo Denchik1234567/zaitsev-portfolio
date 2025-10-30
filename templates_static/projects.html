@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4">Выполненные проекты</h2>
+
+<div class="row">
+    {% for project in projects %}
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ project.title }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Год: {{ project.year }}</h6>
+                <p class="card-text">{{ project.description }}</p>
+
+                <div class="mt-3">
+                    <h6>Используемые технологии:</h6>
+                    <div class="d-flex flex-wrap gap-1">
+                        {% for tech in project.technologies %}
+                        <span class="badge bg-secondary">{{ tech }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="alert alert-info mt-4">
+    <h5>Готов к новым вызовам!</h5>
+    <p class="mb-0">Если у вас есть интересный проект в области АСУТП, КИПиА или автоматизации - свяжитесь со мной для обсуждения сотрудничества.</p>
+</div>
+{% endblock %}
