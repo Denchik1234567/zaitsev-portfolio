@@ -1,5 +1,14 @@
 body {
     background-color: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;  /* Важно: занимает всю высоту viewport */
+    margin: 0;
+}
+
+main {
+    flex: 1;  /* Занимает всё доступное пространство */
+    padding-bottom: 2rem; /* Отступ снизу для контента */
 }
 
 .profile-photo {
@@ -24,6 +33,24 @@ body {
     font-size: 0.9em;
 }
 
+/* Стили для подвала */
 footer {
-    margin-top: auto;
+    margin-top: auto;  /* Автоматически прижимается к низу */
+    background-color: #343a40 !important;
+}
+
+/* Дополнительные стили для лучшего отображения */
+.container {
+    max-width: 1200px;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+    .profile-photo {
+        max-width: 200px;
+    }
+
+    main {
+        padding-bottom: 1rem;
+    }
 }
