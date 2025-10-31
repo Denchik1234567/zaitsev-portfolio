@@ -2,6 +2,8 @@ from flask import Flask, render_template
 import os
 
 
+#  Проверка что изменилось
+# git status
 # Собираем статическую версию
 # python build_static.py
 # Заливаем на GitHub
