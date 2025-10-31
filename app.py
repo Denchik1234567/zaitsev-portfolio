@@ -1,6 +1,14 @@
 from flask import Flask, render_template
 import os
 
+
+# Собираем статическую версию
+# python build_static.py
+# Заливаем на GitHub
+# git add .
+# git commit -m "Описание изменений"
+# git push
+
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
 
@@ -8,7 +16,7 @@ app.config.from_pyfile('config.py')
 PROJECTS_LIST = [
     {
         'title': 'Модернизация системы управления микроклиматом (птицеводство)',
-        'year': 2012,
+        'year': 2013,
         'description': 'Разработка и внедрение системы контроля и регулирования уровня вентиляции, CO2, температуры и влажности в птичнике. Замена устаревших датчиков, программирование ПЛК OWEN, интеграция с SCADA-системой.',
         'technologies': ['СПК107', 'Мастер-Скада', 'Modbus TCP']
     },
