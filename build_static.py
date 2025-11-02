@@ -21,8 +21,9 @@ def build_static_site():
         print("❌ Папка static не найдена")
         return
 
+
     # Копируем SEO файлы
-    seo_files = ['sitemap.xml', 'robots.txt']
+    seo_files = ['sitemap.xml', 'robots.txt' 'yandex_657470568b79074b.html']
     for seo_file in seo_files:
         if os.path.exists(seo_file):
             shutil.copy2(seo_file, 'docs/')
