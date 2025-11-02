@@ -44,6 +44,22 @@ footer {
     max-width: 1200px;
 }
 
+/* Стили для галереи проектов */
+.project-gallery, .project-videos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.project-image, .project-video {
+    transition: transform 0.3s ease;
+}
+
+.project-image:hover {
+    transform: scale(1.05);
+}
+
+
 /* Адаптивность для мобильных */
 @media (max-width: 768px) {
     .profile-photo {
@@ -54,3 +70,5 @@ footer {
         padding-bottom: 1rem;
     }
 }
+
+

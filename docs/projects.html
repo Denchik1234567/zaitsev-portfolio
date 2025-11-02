@@ -54,6 +54,30 @@
                     <h6 class="card-subtitle mb-2 text-muted">Год: 2018</h6>
                     <p class="card-text">Разработка и внедрение системы управления кюбельной тележкой. Разработка электросхем, программирование ПЛК Delta, создание интерфейса оператора в Мастер-Скада.</p>
                     <div class="mt-3">
+                        <h6>Фотографии проекта:</h6>
+                        <div class="project-gallery">
+                            <img src="static/img/projects/foto_kub1.jpg" 
+                                 alt="Фото проекта Модернизация системы транспортировки битона на производстве ЖБИ" 
+                                 class="img-thumbnail me-2 mb-2 project-image"
+                                 style="max-width: 150px; cursor: pointer;"
+                                 onclick="openModal('static/img/projects/foto_kub1.jpg')">
+                            <img src="static/img/projects/foto_kub2.jpg" 
+                                 alt="Фото проекта Модернизация системы транспортировки битона на производстве ЖБИ" 
+                                 class="img-thumbnail me-2 mb-2 project-image"
+                                 style="max-width: 150px; cursor: pointer;"
+                                 onclick="openModal('static/img/projects/foto_kub2.jpg')">
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <h6>Видео проекта:</h6>
+                        <div class="project-videos">
+                            <video controls class="img-thumbnail me-2 mb-2 project-video" style="max-width: 200px;">
+                                <source src="static/video/projects/vid_kub1.mp4" type="video/mp4">
+                                Ваш браузер не поддерживает видео тег.
+                            </video>
+                        </div>
+                    </div>
+                    <div class="mt-3">
                         <h6>Используемые технологии:</h6>
                         <div class="d-flex flex-wrap gap-1"><span class="badge bg-secondary">ПЛК Delta</span><span class="badge bg-secondary">CAD</span><span class="badge bg-secondary">Modbus RTU</span><span class="badge bg-secondary">Power Line Communication, Преобразователь частоты</span>
                         </div>
@@ -76,10 +100,30 @@
             </div>
         </div>
     </div>
+    <!-- Модальное окно для просмотра изображений -->
+    <div class="modal fade" id="imageModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modalImage" src="" alt="" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="alert alert-info mt-4">
         <h5>Готов к новым вызовам!</h5>
         <p class="mb-0">Если у вас есть интересный проект в области АСУТП, КИПиА или автоматизации - свяжитесь со мной для обсуждения сотрудничества.</p>
     </div>
+    <script>
+    function openModal(imageSrc) {
+        document.getElementById('modalImage').src = imageSrc;
+        var myModal = new bootstrap.Modal(document.getElementById('imageModal'));
+        myModal.show();
+    }
+    </script>
     </main>
 
     <footer class="bg-dark text-light py-4 mt-5">

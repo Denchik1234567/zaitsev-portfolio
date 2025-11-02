@@ -21,8 +21,6 @@ def build_static_site():
         print("❌ Папка static не найдена")
         return
 
-
-
     # Базовый HTML шаблон
     base_html = '''<!DOCTYPE html>
 <html lang="ru">
@@ -194,7 +192,7 @@ def build_static_site():
         </div>
     </div>'''
 
-    # Создаем projects.html
+    # Создаем projects.html с поддержкой медиа
     projects_content = '''<h2 class="mb-4">Выполненные проекты</h2>
     <div class="row">'''
 
@@ -205,7 +203,46 @@ def build_static_site():
                 <div class="card-body">
                     <h5 class="card-title">{project['title']}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">Год: {project['year']}</h6>
-                    <p class="card-text">{project['description']}</p>
+                    <p class="card-text">{project['description']}</p>'''
+
+        # Добавляем изображения
+        if 'images' in project and project['images']:
+            projects_content += '''
+                    <div class="mt-3">
+                        <h6>Фотографии проекта:</h6>
+                        <div class="project-gallery">'''
+
+            for image in project['images']:
+                projects_content += f'''
+                            <img src="static/img/projects/{image}" 
+                                 alt="Фото проекта {project['title']}" 
+                                 class="img-thumbnail me-2 mb-2 project-image"
+                                 style="max-width: 150px; cursor: pointer;"
+                                 onclick="openModal('static/img/projects/{image}')">'''
+
+            projects_content += '''
+                        </div>
+                    </div>'''
+
+        # Добавляем видео
+        if 'videos' in project and project['videos']:
+            projects_content += '''
+                    <div class="mt-3">
+                        <h6>Видео проекта:</h6>
+                        <div class="project-videos">'''
+
+            for video in project['videos']:
+                projects_content += f'''
+                            <video controls class="img-thumbnail me-2 mb-2 project-video" style="max-width: 200px;">
+                                <source src="static/video/projects/{video}" type="video/mp4">
+                                Ваш браузер не поддерживает видео тег.
+                            </video>'''
+
+            projects_content += '''
+                        </div>
+                    </div>'''
+
+        projects_content += f'''
                     <div class="mt-3">
                         <h6>Используемые технологии:</h6>
                         <div class="d-flex flex-wrap gap-1">'''
@@ -222,10 +259,30 @@ def build_static_site():
 
     projects_content += '''
     </div>
+    <!-- Модальное окно для просмотра изображений -->
+    <div class="modal fade" id="imageModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modalImage" src="" alt="" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="alert alert-info mt-4">
         <h5>Готов к новым вызовам!</h5>
         <p class="mb-0">Если у вас есть интересный проект в области АСУТП, КИПиА или автоматизации - свяжитесь со мной для обсуждения сотрудничества.</p>
-    </div>'''
+    </div>
+    <script>
+    function openModal(imageSrc) {
+        document.getElementById('modalImage').src = imageSrc;
+        var myModal = new bootstrap.Modal(document.getElementById('imageModal'));
+        myModal.show();
+    }
+    </script>'''
 
     # Сохраняем файлы
     with open('docs/index.html', 'w', encoding='utf-8') as f:
@@ -238,7 +295,7 @@ def build_static_site():
 
     with open('docs/projects.html', 'w', encoding='utf-8') as f:
         f.write(base_html.format(title='Проекты - Зайцев Денис', content=projects_content))
-    print("✅ projects.html создан")
+    print("✅ projects.html создан с поддержкой медиа")
 
     # Создаем файл .nojekyll для GitHub Pages
     with open('docs/.nojekyll', 'w') as f:
