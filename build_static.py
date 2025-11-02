@@ -21,13 +21,53 @@ def build_static_site():
         print("❌ Папка static не найдена")
         return
 
-    # Базовый HTML шаблон
+    # Копируем SEO файлы
+    seo_files = ['sitemap.xml', 'robots.txt']
+    for seo_file in seo_files:
+        if os.path.exists(seo_file):
+            shutil.copy2(seo_file, 'docs/')
+            print(f"✅ {seo_file} скопирован")
+
+    # Базовый HTML шаблон с SEO
     base_html = '''<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title}</title>
+
+    <!-- SEO Мета-теги -->
+    <meta name="description" content="Инженер АСУТП, КИПиА с опытом работы с 2010 года. Проектирование систем автоматизации, программирование ПЛК, SCADA системы, промышленная автоматизация.">
+    <meta name="keywords" content="АСУТП, КИПиА, инженер, автоматизация, ПЛК, SCADA, CODESYS, промышленная автоматизация, Зайцев Денис">
+    <meta name="author" content="Зайцев Денис Александрович">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://denisasutp.github.io/zaitsev-portfolio">
+
+    <!-- Структурированные данные -->
+    <script type="application/ld+json">
+    {{
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Зайцев Денис Александрович",
+      "jobTitle": "Инженер АСУТП, КИПиА",
+      "description": "Инженер АСУТП, КИПиА с опытом работы с 2010 года в области промышленной автоматизации",
+      "birthDate": "1987",
+      "telephone": "+7 (983) 543-97-95",
+      "email": "Denis.Zaitsev.1987@yandex.ru",
+      "address": {{
+        "@type": "PostalAddress",
+        "addressLocality": "Барнаул",
+        "addressRegion": "Алтайский край",
+        "addressCountry": "RU"
+      }},
+      "url": "https://denisasutp.github.io/zaitsev-portfolio",
+      "knowsAbout": [
+        "АСУТП", "КИПиА", "ПЛК", "SCADA", "CODESYS", "МЭК 61131-3", 
+        "Modbus", "Profinet", "Ethernet/IP", "Python", "Android разработка"
+      ]
+    }}
+    </script>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="static/css/style.css">
 </head>
@@ -73,14 +113,14 @@ def build_static_site():
     index_content = '''
     <div class="row align-items-center">
         <div class="col-md-4 text-center">
-            <img src="static/img/photo.jpg" alt="Зайцев Денис Александрович" class="img-fluid rounded-circle mb-4 profile-photo">
+            <img src="static/img/photo.jpg" alt="Зайцев Денис Александрович - Инженер АСУТП, КИПиА" class="img-fluid rounded-circle mb-4 profile-photo">
         </div>
         <div class="col-md-8">
             <h1>Зайцев Денис Александрович</h1>
             <p class="lead">Инженер АСУТП, КИПиА с опытом работы с 2010 года</p>
 
             <div class="mt-4">
-                <h3>Контактная информация</h3>
+                <h2>Контактная информация</h2>
                 <ul class="list-unstyled">
                     <li><strong>Год рождения:</strong> 1987</li>
                     <li><strong>Телефон:</strong> +7 (983) 543-97-95</li>
@@ -90,7 +130,7 @@ def build_static_site():
             </div>
 
             <div class="mt-4">
-                <h3>Ключевые компетенции</h3>
+                <h2>Ключевые компетенции</h2>
                 <div class="d-flex flex-wrap gap-2">
                     <span class="badge bg-primary">АСУТП</span>
                     <span class="badge bg-primary">КИПиА</span>
@@ -109,17 +149,17 @@ def build_static_site():
 
     # Создаем experience.html
     experience_content = '''
-    <h2 class="mb-4">Опыт работы и Образование</h2>
+    <h1>Опыт работы и Образование</h1>
     <div class="row">
         <div class="col-md-6">
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white">
-                    <h5>Образование</h5>
+                    <h2>Образование</h2>
                 </div>
                 <div class="card-body">
-                    <h6>Политехнический колледж</h6>
+                    <h3>Политехнический колледж</h3>
                     <p>Специальность: Автоматизация технологических процессов и производств</p>
-                    <h6 class="mt-3">Дополнительное образование:</h6>
+                    <h4 class="mt-3">Дополнительное образование:</h4>
                     <ul>
                         <li>Диплом автослесаря</li>
                         <li>Диплом автоэлектрика</li>
@@ -128,7 +168,7 @@ def build_static_site():
             </div>
             <div class="card mb-4">
                 <div class="card-header bg-success text-white">
-                    <h5>Водительское удостоверение</h5>
+                    <h2>Водительское удостоверение</h2>
                 </div>
                 <div class="card-body">
                     <p>Категории: B, C</p>
@@ -138,12 +178,12 @@ def build_static_site():
         <div class="col-md-6">
             <div class="card mb-4">
                 <div class="card-header bg-info text-white">
-                    <h5>Опыт работы</h5>
+                    <h2>Опыт работы</h2>
                 </div>
                 <div class="card-body">
                     <p><strong>С 2010 года</strong> в области АСУТП и КИПиА</p>
                     <p><strong>Отрасли:</strong> промышленные и пищевые производства</p>
-                    <h6 class="mt-3">Основные направления:</h6>
+                    <h4 class="mt-3">Основные направления:</h4>
                     <ul>
                         <li>Проектирование систем АСУТП и КИПиА</li>
                         <li>Программирование ПЛК</li>
@@ -159,12 +199,12 @@ def build_static_site():
     </div>
     <div class="card">
         <div class="card-header bg-warning">
-            <h5>Технические навыки</h5>
+            <h2>Технические навыки</h2>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <h6>Оборудование и приборы:</h6>
+                    <h3>Оборудование и приборы:</h3>
                     <ul>
                         <li>ПЛК ОВЕН, Delta, Schneider Electric и все что под CODESYS</li>
                         <li>Программируемые реле, ПЧ, Модули ввода/вывода, ПИД регуляторы, Даталоггеры, Анализаторы, Счетчики, Таймеры и.т.д</li>
@@ -174,7 +214,7 @@ def build_static_site():
                     </ul>
                 </div>
                 <div class="col-md-6">
-                    <h6>Программное обеспечение:</h6>
+                    <h3>Программное обеспечение:</h3>
                     <ul>
                         <li>CODESYS 2.3</li>
                         <li>CODESYS 3.5</li>
@@ -193,7 +233,7 @@ def build_static_site():
     </div>'''
 
     # Создаем projects.html с поддержкой медиа
-    projects_content = '''<h2 class="mb-4">Выполненные проекты</h2>
+    projects_content = '''<h1>Выполненные проекты</h1>
     <div class="row">'''
 
     for project in PROJECTS_LIST:
@@ -201,15 +241,15 @@ def build_static_site():
         <div class="col-md-6 mb-4">
             <div class="card h-100">
                 <div class="card-body">
-                    <h5 class="card-title">{project['title']}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Год: {project['year']}</h6>
+                    <h2 class="card-title">{project['title']}</h2>
+                    <h3 class="card-subtitle mb-2 text-muted">Год: {project['year']}</h3>
                     <p class="card-text">{project['description']}</p>'''
 
         # Добавляем изображения
         if 'images' in project and project['images']:
             projects_content += '''
                     <div class="mt-3">
-                        <h6>Фотографии проекта:</h6>
+                        <h4>Фотографии проекта:</h4>
                         <div class="project-gallery">'''
 
             for image in project['images']:
@@ -228,7 +268,7 @@ def build_static_site():
         if 'videos' in project and project['videos']:
             projects_content += '''
                     <div class="mt-3">
-                        <h6>Видео проекта:</h6>
+                        <h4>Видео проекта:</h4>
                         <div class="project-videos">'''
 
             for video in project['videos']:
@@ -244,7 +284,7 @@ def build_static_site():
 
         projects_content += f'''
                     <div class="mt-3">
-                        <h6>Используемые технологии:</h6>
+                        <h4>Используемые технологии:</h4>
                         <div class="d-flex flex-wrap gap-1">'''
 
         for tech in project['technologies']:
@@ -273,7 +313,7 @@ def build_static_site():
         </div>
     </div>
     <div class="alert alert-info mt-4">
-        <h5>Готов к новым вызовам!</h5>
+        <h3>Готов к новым вызовам!</h3>
         <p class="mb-0">Если у вас есть интересный проект в области АСУТП, КИПиА или автоматизации - свяжитесь со мной для обсуждения сотрудничества.</p>
     </div>
     <script>
@@ -304,7 +344,8 @@ def build_static_site():
 
     print("\n🎉 Статический сайт создан в папке docs/")
     print("📁 Для GitHub Pages используйте папку: /docs")
-    print("🌐 Сайт будет доступен по адресу: https://your-username.github.io/your-repository-name/")
+    print("🌐 Сайт будет доступен по адресу: https://denisasutp.github.io/zaitsev-portfolio/")
+    print("🔍 SEO оптимизация добавлена!")
 
 
 if __name__ == '__main__':
