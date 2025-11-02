@@ -5,31 +5,31 @@ from app import PROJECTS_LIST
 
 
 def build_static_site():
-    print("🔨 Сборка статического сайта для GitHub Pages...")
+    print("🔨 Сборка статического сайта для GitHub Pages (корневой деплой)...")
 
     # Создаем папку docs если её нет
-    os.makedirs('docs', exist_ok=True)
+    output_dir = 'docs'
+    os.makedirs(output_dir, exist_ok=True)
 
     # Копируем статические файлы (CSS, изображения)
-    if os.path.exists('docs/static'):
-        shutil.rmtree('docs/static')
+    if os.path.exists(f'{output_dir}/static'):
+        shutil.rmtree(f'{output_dir}/static')
 
     if os.path.exists('static'):
-        shutil.copytree('static', 'docs/static')
+        shutil.copytree('static', f'{output_dir}/static')
         print("✅ Статические файлы скопированы")
     else:
         print("❌ Папка static не найдена")
         return
 
-
     # Копируем SEO файлы
     seo_files = ['sitemap.xml', 'robots.txt', 'yandex_657470568b79074b.html']
     for seo_file in seo_files:
         if os.path.exists(seo_file):
-            shutil.copy2(seo_file, 'docs/')
+            shutil.copy2(seo_file, f'{output_dir}/')
             print(f"✅ {seo_file} скопирован")
 
-    # Базовый HTML шаблон с SEO
+    # Базовый HTML шаблон с SEO для корневого домена
     base_html = '''<!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -43,7 +43,7 @@ def build_static_site():
     <meta name="keywords" content="АСУТП, КИПиА, инженер, автоматизация, ПЛК, SCADA, CODESYS, промышленная автоматизация, Зайцев Денис">
     <meta name="author" content="Зайцев Денис Александрович">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://denisasutp.github.io/zaitsev-portfolio">
+    <link rel="canonical" href="https://denisasutp.github.io">
 
     <!-- Структурированные данные -->
     <script type="application/ld+json">
@@ -62,7 +62,7 @@ def build_static_site():
         "addressRegion": "Алтайский край",
         "addressCountry": "RU"
       }},
-      "url": "https://denisasutp.github.io/zaitsev-portfolio",
+      "url": "https://denisasutp.github.io",
       "knowsAbout": [
         "АСУТП", "КИПиА", "ПЛК", "SCADA", "CODESYS", "МЭК 61131-3", 
         "Modbus", "Profinet", "Ethernet/IP", "Python", "Android разработка"
@@ -327,27 +327,28 @@ def build_static_site():
     </script>'''
 
     # Сохраняем файлы
-    with open('docs/index.html', 'w', encoding='utf-8') as f:
+    with open(f'{output_dir}/index.html', 'w', encoding='utf-8') as f:
         f.write(base_html.format(title='Зайцев Денис Александрович - Инженер АСУТП, КИПиА', content=index_content))
     print("✅ index.html создан")
 
-    with open('docs/experience.html', 'w', encoding='utf-8') as f:
+    with open(f'{output_dir}/experience.html', 'w', encoding='utf-8') as f:
         f.write(base_html.format(title='Опыт и Навыки - Зайцев Денис', content=experience_content))
     print("✅ experience.html создан")
 
-    with open('docs/projects.html', 'w', encoding='utf-8') as f:
+    with open(f'{output_dir}/projects.html', 'w', encoding='utf-8') as f:
         f.write(base_html.format(title='Проекты - Зайцев Денис', content=projects_content))
     print("✅ projects.html создан с поддержкой медиа")
 
     # Создаем файл .nojekyll для GitHub Pages
-    with open('docs/.nojekyll', 'w') as f:
+    with open(f'{output_dir}/.nojekyll', 'w') as f:
         f.write('')
     print("✅ .nojekyll создан")
 
     print("\n🎉 Статический сайт создан в папке docs/")
     print("📁 Для GitHub Pages используйте папку: /docs")
-    print("🌐 Сайт будет доступен по адресу: https://denisasutp.github.io/zaitsev-portfolio/")
+    print("🌐 Сайт будет доступен по адресу: https://denisasutp.github.io")
     print("🔍 SEO оптимизация добавлена!")
+    print("✅ Яндекс.Вебмастер сможет найти meta-тег на главной странице!")
 
 
 if __name__ == '__main__':
