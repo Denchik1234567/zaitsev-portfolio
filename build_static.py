@@ -35,6 +35,7 @@ def build_static_site():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="yandex-verification" content="657470568b79074b" />
     <title>{title}</title>
 
     <!-- SEO Мета-теги -->
