@@ -21,7 +21,7 @@ PROJECTS_LIST = [
         'year': 2013,
         'description': 'Разработка и внедрение системы контроля и регулирования уровня вентиляции, CO2, температуры и влажности в птичнике. Замена устаревших датчиков, программирование ПЛК OWEN, интеграция с SCADA-системой.',
         'technologies': ['СПК107', 'Мастер-Скада', 'Modbus TCP'],
-        'images': ['Ukpf1.jpg', 'Ukpf2.jpg'],  # Добавляем изображения
+        'images': ['Ukpf1.jpg',  'foto_kub2.jpg'],  # Добавляем изображения
         'videos': []  # Добавляем видео
     },
     {
@@ -29,7 +29,7 @@ PROJECTS_LIST = [
         'year': 2018,
         'description': 'Разработка и внедрение системы управления кюбельной тележкой. Разработка электросхем, программирование ПЛК Delta, создание интерфейса оператора в Мастер-Скада.',
         'technologies': ['ПЛК Delta', 'CAD', 'Modbus RTU', 'Power Line Communication', 'Преобразователь частоты'],
-        'images': ['foto_kub1.jpg', 'foto_kub2.jpg', 'foto_kub2.jpg'],
+        'images': ['foto_kub1.jpg', 'foto_kub2.jpg'],
         'videos': ['vid_kub1.mp4']
     },
     {
