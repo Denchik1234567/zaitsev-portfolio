@@ -1,13 +1,16 @@
 import os
 import shutil
 import re
-from app import PROJECTS_LIST
 import subprocess
+from app import PROJECTS_LIST
 
 
 def convert_video_for_web(input_path, output_path):
     """Конвертирует видео в веб-совместимый формат"""
     try:
+        # Создаем папку для выходного файла если нет
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
         cmd = [
             'ffmpeg', '-i', input_path,
             '-c:v', 'libx264',
@@ -18,9 +21,22 @@ def convert_video_for_web(input_path, output_path):
             '-movflags', '+faststart',
             '-y', output_path
         ]
-        subprocess.run(cmd, check=True, capture_output=True)
-        return True
-    except (subprocess.CalledProcessError, FileNotFoundError):
+
+        # Запускаем конвертацию
+        result = subprocess.run(cmd, capture_output=True, text=True, shell=True)
+
+        if result.returncode == 0:
+            return True
+        else:
+            print(f"❌ Ошибка конвертации {input_path}: {result.stderr}")
+            # Копируем оригинал если конвертация не удалась
+            shutil.copy2(input_path, output_path)
+            return False
+
+    except Exception as e:
+        print(f"❌ Ошибка при конвертации видео: {e}")
+        # Копируем оригинал как fallback
+        shutil.copy2(input_path, output_path)
         return False
 
 
@@ -36,8 +52,23 @@ def build_static_site():
         shutil.rmtree(f'{output_dir}/static')
 
     if os.path.exists('static'):
+        # Сначала копируем всю структуру
         shutil.copytree('static', f'{output_dir}/static')
         print("✅ Статические файлы скопированы")
+
+        # Затем обрабатываем видео
+        video_dir = 'static/video/projects'
+        output_video_dir = f'{output_dir}/static/video/projects'
+
+        if os.path.exists(video_dir):
+            for video_file in os.listdir(video_dir):
+                if video_file.lower().endswith('.mp4'):
+                    input_path = os.path.join(video_dir, video_file)
+                    output_path = os.path.join(output_video_dir, video_file)
+
+                    print(f"🔄 Обработка видео: {video_file}")
+                    if convert_video_for_web(input_path, output_path):
+                        print(f"✅ Видео {video_file} обработано")
     else:
         print("❌ Папка static не найдена")
         return
@@ -385,6 +416,7 @@ def build_static_site():
     print("🔍 SEO оптимизация добавлена!")
     print("✅ Яндекс.Вебмастер сможет найти meta-тег на главной странице!")
     print("📊 Яндекс.Метрика добавлена и будет отслеживать посетителей!")
+    print("🎬 Видео оптимизированы для веб-воспроизведения!")
 
 
 if __name__ == '__main__':
