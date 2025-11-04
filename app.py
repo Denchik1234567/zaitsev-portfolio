@@ -77,7 +77,7 @@ PROJECTS_LIST = [
         'description': 'Разработка и внедрение системы управления кюбельной тележкой, разработка электросхем, программирование ПЛК Delta, создание интерфейса оператора в Мастер-Скада.',
         'technologies': ['ПЛК Delta', 'CAD', 'Modbus RTU', 'Power Line Communication', 'Преобразователь частоты'],
         'images': ['foto_kub1.jpg', 'foto_kub2.jpg'],
-        'videos': ['vid_kub1.mp4', "Karusel1.mp4"]
+        'videos': ['vid_kub1.mp4']
     },
 
     {
