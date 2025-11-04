@@ -39,6 +39,14 @@ PROJECTS_LIST = [
         'technologies': ['Мастер-Скада', 'Меркурий', 'RS-485'],
         'images': [],
         'videos': []
+    },
+    {
+        'title': 'Разработка ПО на Python',
+        'year': 2023,
+        'description': 'Разработка ПО для конфигурирования преобразователей частоты компании КИППРИБОР.',
+        'technologies': ['Python', 'Modbus RTU', 'RS-485'],
+        'images': ["AFDConfig.png"],
+        'videos': []
     }
 ]
 
