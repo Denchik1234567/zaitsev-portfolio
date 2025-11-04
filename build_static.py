@@ -2,6 +2,7 @@ import os
 import shutil
 import re
 import subprocess
+import datetime
 from app import PROJECTS_LIST
 
 
@@ -125,6 +126,25 @@ def build_static_site():
     <link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
+    <!-- Куки-уведомление -->
+    <div id="cookieNotification" class="cookie-notification">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <p class="mb-0">
+                        🍪 Мы используем файлы cookie для улучшения работы сайта. 
+                        Продолжая использовать сайт, вы соглашаетесь с 
+                        <a href="privacy.html" class="text-light">Политикой конфиденциальности</a>.
+                    </p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button id="acceptCookies" class="btn btn-primary btn-sm">Принять</button>
+                    <button id="rejectCookies" class="btn btn-outline-light btn-sm">Отклонить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="index.html">Зайцев Д.А.</a>
@@ -155,24 +175,120 @@ def build_static_site():
         <div class="container text-center">
             <p>&copy; 2025 Зайцев Денис Александрович</p>
             <p>Телефон: +7 (983) 543-97-95 | Email: Denis.Zaitsev.1987@yandex.ru</p>
+            <p><a href="privacy.html" class="text-light">Политика конфиденциальности</a></p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Яндекс.Метрика -->
-    <script type="text/javascript">
-        (function(m,e,t,r,i,k,a){{
-            m[i]=m[i]||function(){{(m[i].a=m[i].a||[]).push(arguments)}};
-            m[i].l=1*new Date();
-            for (var j = 0; j < document.scripts.length; j++) {{if (document.scripts[j].src === r) {{ return; }}}}
-            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-        }})(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=105093615', 'ym');
+    <!-- Яндекс.Метрика (условная загрузка) -->
+    <div id="yandexMetrica"></div>
 
-        ym(105093615, 'init', {{ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true}});
+    <!-- Скрипт для работы с куки -->
+    <script>
+        // Функции для работы с куки
+        function setCookie(name, value, days) {{
+            const d = new Date();
+            d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + d.toUTCString();
+            document.cookie = name + "=" + value + ";" + expires + ";path=/;SameSite=Lax";
+        }}
+
+        function getCookie(name) {{
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {{
+                let c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }}
+            return null;
+        }}
+
+        function deleteCookie(name) {{
+            document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        }}
+
+        // Управление куки-уведомлением
+        document.addEventListener('DOMContentLoaded', function() {{
+            const cookieNotification = document.getElementById('cookieNotification');
+            const acceptCookies = document.getElementById('acceptCookies');
+            const rejectCookies = document.getElementById('rejectCookies');
+
+            // Проверяем, было ли уже принято решение по куки
+            const cookiesAccepted = getCookie('cookiesAccepted');
+
+            if (cookiesAccepted === null) {{
+                // Показываем уведомление, если решение еще не принято
+                cookieNotification.style.display = 'block';
+            }} else if (cookiesAccepted === 'true') {{
+                // Если куки приняты, загружаем Яндекс.Метрику
+                loadYandexMetrica();
+            }}
+
+            // Обработка принятия куки
+            acceptCookies.addEventListener('click', function() {{
+                setCookie('cookiesAccepted', 'true', 365);
+                setCookie('cookiesRejected', 'false', 365);
+                cookieNotification.style.display = 'none';
+                loadYandexMetrica();
+            }});
+
+            // Обработка отклонения куки
+            rejectCookies.addEventListener('click', function() {{
+                setCookie('cookiesAccepted', 'false', 365);
+                setCookie('cookiesRejected', 'true', 365);
+                cookieNotification.style.display = 'none';
+                // Удаляем Яндекс.Метрику если она была загружена
+                deleteYandexMetrica();
+            }});
+        }});
+
+        // Функция загрузки Яндекс.Метрики
+        function loadYandexMetrica() {{
+            const script = document.createElement('script');
+            script.innerHTML = `
+                (function(m,e,t,r,i,k,a){{
+                    m[i]=m[i]||function(){{(m[i].a=m[i].a||[]).push(arguments)}};
+                    m[i].l=1*new Date();
+                    for (var j = 0; j < document.scripts.length; j++) {{if (document.scripts[j].src === r) {{ return; }}}}
+                    k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+                }})(window, document,'script','https://mc.yandex.ru/metrika/tag.js','ym');
+
+                ym(105093615, 'init', {{ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true}});
+            `;
+            document.getElementById('yandexMetrica').appendChild(script);
+        }}
+
+        // Функция удаления Яндекс.Метрики
+        function deleteYandexMetrica() {{
+            document.getElementById('yandexMetrica').innerHTML = '';
+            if (window.ym) {{
+                delete window.ym;
+            }}
+        }}
+
+        // Функция для открытия модального окна с изображениями
+        function openModal(imageSrc) {{
+            document.getElementById('modalImage').src = imageSrc;
+            var myModal = new bootstrap.Modal(document.getElementById('imageModal'));
+            myModal.show();
+        }}
     </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/105093615" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Яндекс.Метрика -->
+
+    <!-- Модальное окно для просмотра изображений -->
+    <div class="modal fade" id="imageModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modalImage" src="" alt="" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>'''
@@ -367,30 +483,41 @@ def build_static_site():
 
     projects_content += '''
     </div>
-    <!-- Модальное окно для просмотра изображений -->
-    <div class="modal fade" id="imageModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <img id="modalImage" src="" alt="" class="img-fluid">
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="alert alert-info mt-4">
         <h3>Готов к новым вызовам!</h3>
         <p class="mb-0">Если у вас есть интересный проект в области АСУТП, КИПиА или автоматизации - свяжитесь со мной для обсуждения сотрудничества.</p>
-    </div>
-    <script>
-    function openModal(imageSrc) {
-        document.getElementById('modalImage').src = imageSrc;
-        var myModal = new bootstrap.Modal(document.getElementById('imageModal'));
-        myModal.show();
-    }
-    </script>'''
+    </div>'''
+
+    # Создаем privacy.html
+    privacy_content = f'''
+    <h1>Политика конфиденциальности</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <h2>Использование файлов cookie</h2>
+            <p>Этот сайт использует файлы cookie для улучшения работы и аналитики посещений.</p>
+
+            <h3>Какие cookie мы используем:</h3>
+            <ul>
+                <li><strong>Технические cookie:</strong> необходимые для работы сайта</li>
+                <li><strong>Аналитические cookie:</strong> для сбора анонимной статистики (Яндекс.Метрика)</li>
+                <li><strong>Функциональные cookie:</strong> для запоминания ваших предпочтений</li>
+            </ul>
+
+            <h3>Яндекс.Метрика</h3>
+            <p>Мы используем Яндекс.Метрику для анализа поведения пользователей на сайте. 
+            Собранные данные анонимны и используются только для улучшения работы сайта.</p>
+
+            <h3>Ваши права</h3>
+            <p>Вы можете в любой момент отозвать согласие на использование cookie через настройки браузера 
+            или удалив соответствующие файлы cookie.</p>
+
+            <h3>Контакты</h3>
+            <p>По вопросам конфиденциальности обращайтесь: Denis.Zaitsev.1987@yandex.ru</p>
+
+            <p class="text-muted"><small>Последнее обновление: {datetime.datetime.now().strftime("%d.%m.%Y")}</small></p>
+        </div>
+    </div>'''
 
     # Сохраняем файлы
     with open(f'{output_dir}/index.html', 'w', encoding='utf-8') as f:
@@ -405,6 +532,10 @@ def build_static_site():
         f.write(base_html.format(title='Проекты - Зайцев Денис', content=projects_content))
     print("✅ projects.html создан с поддержкой медиа")
 
+    with open(f'{output_dir}/privacy.html', 'w', encoding='utf-8') as f:
+        f.write(base_html.format(title='Политика конфиденциальности - Зайцев Денис', content=privacy_content))
+    print("✅ privacy.html создан")
+
     # Создаем файл .nojekyll для GitHub Pages
     with open(f'{output_dir}/.nojekyll', 'w') as f:
         f.write('')
@@ -415,7 +546,9 @@ def build_static_site():
     print("🌐 Сайт будет доступен по адресу: https://denisasutp.github.io")
     print("🔍 SEO оптимизация добавлена!")
     print("✅ Яндекс.Вебмастер сможет найти meta-тег на главной странице!")
-    print("📊 Яндекс.Метрика добавлена и будет отслеживать посетителей!")
+    print("📊 Яндекс.Метрика добавлена с поддержкой куки!")
+    print("🍪 Куки-уведомление добавлено!")
+    print("📄 Страница политики конфиденциальности создана!")
     print("🎬 Видео оптимизированы для веб-воспроизведения!")
 
 

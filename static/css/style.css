@@ -71,4 +71,46 @@ footer {
     }
 }
 
+/* Стили для куки-уведомления */
+.cookie-notification {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 15px 0;
+    z-index: 9999;
+    border-top: 2px solid #007bff;
+}
 
+.cookie-notification a {
+    text-decoration: underline;
+    color: #ffffff;
+}
+
+.cookie-notification a:hover {
+    color: #80bdff !important;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+    .cookie-notification .text-end {
+        text-align: left !important;
+        margin-top: 10px;
+    }
+
+    .cookie-notification .btn {
+        margin-right: 10px;
+        margin-bottom: 5px;
+    }
+
+    .profile-photo {
+        max-width: 200px;
+    }
+
+    main {
+        padding-bottom: 1rem;
+    }
+}
