@@ -184,13 +184,14 @@ def build_static_site():
     <!-- Яндекс.Метрика (условная загрузка) -->
     <div id="yandexMetrica"></div>
 
-    <!-- Скрипт для работы с куки -->
+  <!-- Скрипт для работы с куки -->
     <script>
         // Функции для работы с куки
         function setCookie(name, value, days) {{
             const d = new Date();
             d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
             const expires = "expires=" + d.toUTCString();
+            // Указываем явно путь для всех страниц сайта
             document.cookie = name + "=" + value + ";" + expires + ";path=/;SameSite=Lax";
         }}
 
@@ -217,13 +218,19 @@ def build_static_site():
 
             // Проверяем, было ли уже принято решение по куки
             const cookiesAccepted = getCookie('cookiesAccepted');
-
-            if (cookiesAccepted === null) {{
+            const cookiesRejected = getCookie('cookiesRejected');
+            
+            // Если решение уже принято (любое) - скрываем уведомление
+            if (cookiesAccepted !== null || cookiesRejected !== null) {{
+                cookieNotification.style.display = 'none';
+                
+                // Если куки приняты, загружаем Яндекс.Метрику
+                if (cookiesAccepted === 'true') {{
+                    loadYandexMetrica();
+                }}
+            }} else {{
                 // Показываем уведомление, если решение еще не принято
                 cookieNotification.style.display = 'block';
-            }} else if (cookiesAccepted === 'true') {{
-                // Если куки приняты, загружаем Яндекс.Метрику
-                loadYandexMetrica();
             }}
 
             // Обработка принятия куки
@@ -232,6 +239,11 @@ def build_static_site():
                 setCookie('cookiesRejected', 'false', 365);
                 cookieNotification.style.display = 'none';
                 loadYandexMetrica();
+                
+                // Сохраняем в localStorage для надежности
+                if (typeof(Storage) !== "undefined") {{
+                    localStorage.setItem('cookiesAccepted', 'true');
+                }}
             }});
 
             // Обработка отклонения куки
@@ -241,7 +253,22 @@ def build_static_site():
                 cookieNotification.style.display = 'none';
                 // Удаляем Яндекс.Метрику если она была загружена
                 deleteYandexMetrica();
+                
+                // Сохраняем в localStorage для надежности
+                if (typeof(Storage) !== "undefined") {{
+                    localStorage.setItem('cookiesAccepted', 'false');
+                }}
             }});
+
+            // Дополнительная проверка через localStorage
+            if (typeof(Storage) !== "undefined") {{
+                const localCookies = localStorage.getItem('cookiesAccepted');
+                if (localCookies === 'true' && getCookie('cookiesAccepted') === null) {{
+                    // Восстанавливаем из localStorage если куки потерялись
+                    setCookie('cookiesAccepted', 'true', 365);
+                    loadYandexMetrica();
+                }}
+            }}
         }});
 
         // Функция загрузки Яндекс.Метрики
