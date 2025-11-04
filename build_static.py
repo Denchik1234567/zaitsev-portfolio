@@ -2,6 +2,26 @@ import os
 import shutil
 import re
 from app import PROJECTS_LIST
+import subprocess
+
+
+def convert_video_for_web(input_path, output_path):
+    """Конвертирует видео в веб-совместимый формат"""
+    try:
+        cmd = [
+            'ffmpeg', '-i', input_path,
+            '-c:v', 'libx264',
+            '-profile:v', 'high',
+            '-level', '4.0',
+            '-pix_fmt', 'yuv420p',
+            '-c:a', 'aac',
+            '-movflags', '+faststart',
+            '-y', output_path
+        ]
+        subprocess.run(cmd, check=True, capture_output=True)
+        return True
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return False
 
 
 def build_static_site():
